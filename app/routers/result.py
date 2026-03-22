@@ -23,14 +23,14 @@ templates = Jinja2Templates(directory="app/templates")
 
 # Top 8 most informative fields to surface in the key inputs summary
 KEY_INPUT_FIELDS = [
-    "cause_of_accident",
-    "driving_experience",
-    "type_of_collision",
-    "weather_conditions",
-    "light_conditions",
-    "road_surface_conditions",
-    "age_band_of_driver",
-    "vehicle_movement",
+    "Cause_of_accident",
+    "Driving_experience",
+    "Type_of_collision",
+    "Weather_conditions",
+    "Light_conditions",
+    "Road_surface_conditions",
+    "Age_band_of_driver",
+    "Vehicle_movement",
 ]
 
 
