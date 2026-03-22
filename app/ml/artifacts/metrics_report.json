@@ -1,0 +1,807 @@
+{
+  "ridge": {
+    "accuracy": 0.8458,
+    "weighted_f1": 0.7751,
+    "macro_f1": 0.3055,
+    "train_time_seconds": 0.005,
+    "confusion_matrix": [
+      [
+        2084,
+        0,
+        0
+      ],
+      [
+        349,
+        0,
+        0
+      ],
+      [
+        31,
+        0,
+        0
+      ]
+    ],
+    "classification_report": {
+      "Slight": {
+        "precision": 0.8457792207792207,
+        "recall": 1.0,
+        "f1-score": 0.9164467897977133,
+        "support": 2084.0
+      },
+      "Serious": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 349.0
+      },
+      "Fatal": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 31.0
+      },
+      "accuracy": 0.8457792207792207,
+      "macro avg": {
+        "precision": 0.2819264069264069,
+        "recall": 0.3333333333333333,
+        "f1-score": 0.30548226326590444,
+        "support": 2464.0
+      },
+      "weighted avg": {
+        "precision": 0.7153424903019059,
+        "recall": 0.8457792207792207,
+        "f1-score": 0.7751116517607284,
+        "support": 2464.0
+      }
+    },
+    "recall_per_class": {
+      "Slight Injury": 1.0,
+      "Serious Injury": 0.0,
+      "Fatal injury": 0.0
+    },
+    "precision_per_class": {
+      "Slight Injury": 0.8458,
+      "Serious Injury": 0.0,
+      "Fatal injury": 0.0
+    },
+    "roc_auc": 0.0
+  },
+  "lasso": {
+    "accuracy": 0.8458,
+    "weighted_f1": 0.7751,
+    "macro_f1": 0.3055,
+    "train_time_seconds": 0.003,
+    "confusion_matrix": [
+      [
+        2084,
+        0,
+        0
+      ],
+      [
+        349,
+        0,
+        0
+      ],
+      [
+        31,
+        0,
+        0
+      ]
+    ],
+    "classification_report": {
+      "Slight": {
+        "precision": 0.8457792207792207,
+        "recall": 1.0,
+        "f1-score": 0.9164467897977133,
+        "support": 2084.0
+      },
+      "Serious": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 349.0
+      },
+      "Fatal": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 31.0
+      },
+      "accuracy": 0.8457792207792207,
+      "macro avg": {
+        "precision": 0.2819264069264069,
+        "recall": 0.3333333333333333,
+        "f1-score": 0.30548226326590444,
+        "support": 2464.0
+      },
+      "weighted avg": {
+        "precision": 0.7153424903019059,
+        "recall": 0.8457792207792207,
+        "f1-score": 0.7751116517607284,
+        "support": 2464.0
+      }
+    },
+    "recall_per_class": {
+      "Slight Injury": 1.0,
+      "Serious Injury": 0.0,
+      "Fatal injury": 0.0
+    },
+    "precision_per_class": {
+      "Slight Injury": 0.8458,
+      "Serious Injury": 0.0,
+      "Fatal injury": 0.0
+    },
+    "roc_auc": 0.0
+  },
+  "lr": {
+    "accuracy": 0.4899,
+    "weighted_f1": 0.583,
+    "macro_f1": 0.3103,
+    "train_time_seconds": 0.033,
+    "confusion_matrix": [
+      [
+        1076,
+        534,
+        474
+      ],
+      [
+        145,
+        115,
+        89
+      ],
+      [
+        4,
+        11,
+        16
+      ]
+    ],
+    "classification_report": {
+      "Slight": {
+        "precision": 0.8783673469387755,
+        "recall": 0.5163147792706334,
+        "f1-score": 0.6503475370202478,
+        "support": 2084.0
+      },
+      "Serious": {
+        "precision": 0.17424242424242425,
+        "recall": 0.32951289398280803,
+        "f1-score": 0.22794846382556988,
+        "support": 349.0
+      },
+      "Fatal": {
+        "precision": 0.027633851468048358,
+        "recall": 0.5161290322580645,
+        "f1-score": 0.05245901639344262,
+        "support": 31.0
+      },
+      "accuracy": 0.4898538961038961,
+      "macro avg": {
+        "precision": 0.3600812075497493,
+        "recall": 0.45398556850383526,
+        "f1-score": 0.31025167241308677,
+        "support": 2464.0
+      },
+      "weighted avg": {
+        "precision": 0.7679321454856021,
+        "recall": 0.4898538961038961,
+        "f1-score": 0.5829969604437976,
+        "support": 2464.0
+      }
+    },
+    "recall_per_class": {
+      "Slight Injury": 0.5163,
+      "Serious Injury": 0.3295,
+      "Fatal injury": 0.5161
+    },
+    "precision_per_class": {
+      "Slight Injury": 0.8784,
+      "Serious Injury": 0.1742,
+      "Fatal injury": 0.0276
+    },
+    "roc_auc": 0.5659
+  },
+  "knn": {
+    "accuracy": 0.8336,
+    "weighted_f1": 0.7791,
+    "macro_f1": 0.3274,
+    "train_time_seconds": 0.002,
+    "confusion_matrix": [
+      [
+        2039,
+        44,
+        1
+      ],
+      [
+        334,
+        15,
+        0
+      ],
+      [
+        30,
+        1,
+        0
+      ]
+    ],
+    "classification_report": {
+      "Slight": {
+        "precision": 0.8485226799833542,
+        "recall": 0.9784069097888676,
+        "f1-score": 0.9088477824827279,
+        "support": 2084.0
+      },
+      "Serious": {
+        "precision": 0.25,
+        "recall": 0.04297994269340974,
+        "f1-score": 0.07334963325183375,
+        "support": 349.0
+      },
+      "Fatal": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 31.0
+      },
+      "accuracy": 0.8336038961038961,
+      "macro avg": {
+        "precision": 0.36617422666111804,
+        "recall": 0.34046228416075913,
+        "f1-score": 0.3273991385781872,
+        "support": 2464.0
+      },
+      "weighted avg": {
+        "precision": 0.75307275368722,
+        "recall": 0.8336038961038961,
+        "f1-score": 0.7790737827511749,
+        "support": 2464.0
+      }
+    },
+    "recall_per_class": {
+      "Slight Injury": 0.9784,
+      "Serious Injury": 0.043,
+      "Fatal injury": 0.0
+    },
+    "precision_per_class": {
+      "Slight Injury": 0.8485,
+      "Serious Injury": 0.25,
+      "Fatal injury": 0.0
+    },
+    "roc_auc": 0.5737
+  },
+  "nb": {
+    "accuracy": 0.8251,
+    "weighted_f1": 0.7659,
+    "macro_f1": 0.3019,
+    "train_time_seconds": 0.006,
+    "confusion_matrix": [
+      [
+        2033,
+        4,
+        47
+      ],
+      [
+        342,
+        0,
+        7
+      ],
+      [
+        31,
+        0,
+        0
+      ]
+    ],
+    "classification_report": {
+      "Slight": {
+        "precision": 0.8449709060681629,
+        "recall": 0.97552783109405,
+        "f1-score": 0.9055679287305123,
+        "support": 2084.0
+      },
+      "Serious": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 349.0
+      },
+      "Fatal": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1-score": 0.0,
+        "support": 31.0
+      },
+      "accuracy": 0.8250811688311688,
+      "macro avg": {
+        "precision": 0.28165696868938767,
+        "recall": 0.32517594369801667,
+        "f1-score": 0.3018559762435041,
+        "support": 2464.0
+      },
+      "weighted avg": {
+        "precision": 0.714658834515443,
+        "recall": 0.8250811688311688,
+        "f1-score": 0.7659105371243456,
+        "support": 2464.0
+      }
+    },
+    "recall_per_class": {
+      "Slight Injury": 0.9755,
+      "Serious Injury": 0.0,
+      "Fatal injury": 0.0
+    },
+    "precision_per_class": {
+      "Slight Injury": 0.845,
+      "Serious Injury": 0.0,
+      "Fatal injury": 0.0
+    },
+    "roc_auc": 0.5765
+  },
+  "dt": {
+    "accuracy": 0.4773,
+    "weighted_f1": 0.5553,
+    "macro_f1": 0.3203,
+    "train_time_seconds": 0.057,
+    "confusion_matrix": [
+      [
+        976,
+        853,
+        255
+      ],
+      [
+        131,
+        186,
+        32
+      ],
+      [
+        5,
+        12,
+        14
+      ]
+    ],
+    "classification_report": {
+      "Slight": {
+        "precision": 0.8776978417266187,
+        "recall": 0.46833013435700577,
+        "f1-score": 0.6107634543178974,
+        "support": 2084.0
+      },
+      "Serious": {
+        "precision": 0.17697431018078022,
+        "recall": 0.5329512893982808,
+        "f1-score": 0.26571428571428574,
+        "support": 349.0
+      },
+      "Fatal": {
+        "precision": 0.046511627906976744,
+        "recall": 0.45161290322580644,
+        "f1-score": 0.08433734939759036,
+        "support": 31.0
+      },
+      "accuracy": 0.4772727272727273,
+      "macro avg": {
+        "precision": 0.3670612599381253,
+        "recall": 0.4842981089936977,
+        "f1-score": 0.3202716964765911,
+        "support": 2464.0
+      },
+      "weighted avg": {
+        "precision": 0.7679903396414294,
+        "recall": 0.4772727272727273,
+        "f1-score": 0.5552677688084859,
+        "support": 2464.0
+      }
+    },
+    "recall_per_class": {
+      "Slight Injury": 0.4683,
+      "Serious Injury": 0.533,
+      "Fatal injury": 0.4516
+    },
+    "precision_per_class": {
+      "Slight Injury": 0.8777,
+      "Serious Injury": 0.177,
+      "Fatal injury": 0.0465
+    },
+    "roc_auc": 0.5904
+  },
+  "rf": {
+    "accuracy": 0.8336,
+    "weighted_f1": 0.7914,
+    "macro_f1": 0.4287,
+    "train_time_seconds": 2.594,
+    "confusion_matrix": [
+      [
+        2018,
+        61,
+        5
+      ],
+      [
+        317,
+        31,
+        1
+      ],
+      [
+        22,
+        4,
+        5
+      ]
+    ],
+    "classification_report": {
+      "Slight": {
+        "precision": 0.8561731014000848,
+        "recall": 0.9683301343570058,
+        "f1-score": 0.9088043233505967,
+        "support": 2084.0
+      },
+      "Serious": {
+        "precision": 0.3229166666666667,
+        "recall": 0.08882521489971347,
+        "f1-score": 0.1393258426966292,
+        "support": 349.0
+      },
+      "Fatal": {
+        "precision": 0.45454545454545453,
+        "recall": 0.16129032258064516,
+        "f1-score": 0.23809523809523808,
+        "support": 31.0
+      },
+      "accuracy": 0.8336038961038961,
+      "macro avg": {
+        "precision": 0.5445450742040687,
+        "recall": 0.40614855727912147,
+        "f1-score": 0.42874180138082135,
+        "support": 2464.0
+      },
+      "weighted avg": {
+        "precision": 0.7755899225143476,
+        "recall": 0.8336038961038961,
+        "f1-score": 0.791377386909383,
+        "support": 2464.0
+      }
+    },
+    "recall_per_class": {
+      "Slight Injury": 0.9683,
+      "Serious Injury": 0.0888,
+      "Fatal injury": 0.1613
+    },
+    "precision_per_class": {
+      "Slight Injury": 0.8562,
+      "Serious Injury": 0.3229,
+      "Fatal injury": 0.4545
+    },
+    "roc_auc": 0.6265,
+    "feature_importance": {
+      "Number_of_vehicles_involved": 0.1128,
+      "Day_of_week": 0.07353,
+      "Types_of_Junction": 0.06951,
+      "Cause_of_accident": 0.06441,
+      "Number_of_casualties": 0.06356,
+      "Type_of_vehicle": 0.05565,
+      "Area_accident_occured": 0.05511,
+      "Age_band_of_driver": 0.0477,
+      "Vehicle_movement": 0.04747,
+      "Type_of_collision": 0.03736,
+      "Driving_experience": 0.0352,
+      "Light_conditions": 0.03501,
+      "Weather_conditions": 0.03477,
+      "Service_year_of_vehicle": 0.033,
+      "Road_allignment": 0.0321
+    }
+  },
+  "gb": {
+    "accuracy": 0.8511,
+    "weighted_f1": 0.8033,
+    "macro_f1": 0.4149,
+    "train_time_seconds": 9.561,
+    "confusion_matrix": [
+      [
+        2059,
+        21,
+        4
+      ],
+      [
+        313,
+        35,
+        1
+      ],
+      [
+        27,
+        1,
+        3
+      ]
+    ],
+    "classification_report": {
+      "Slight": {
+        "precision": 0.858274280950396,
+        "recall": 0.988003838771593,
+        "f1-score": 0.9185813071603837,
+        "support": 2084.0
+      },
+      "Serious": {
+        "precision": 0.6140350877192983,
+        "recall": 0.10028653295128939,
+        "f1-score": 0.1724137931034483,
+        "support": 349.0
+      },
+      "Fatal": {
+        "precision": 0.375,
+        "recall": 0.0967741935483871,
+        "f1-score": 0.15384615384615385,
+        "support": 31.0
+      },
+      "accuracy": 0.8510551948051948,
+      "macro avg": {
+        "precision": 0.6157697895565648,
+        "recall": 0.3950215217570898,
+        "f1-score": 0.41494708470332853,
+        "support": 2464.0
+      },
+      "weighted avg": {
+        "precision": 0.8176001814588719,
+        "recall": 0.8510551948051948,
+        "f1-score": 0.8032731691089992,
+        "support": 2464.0
+      }
+    },
+    "recall_per_class": {
+      "Slight Injury": 0.988,
+      "Serious Injury": 0.1003,
+      "Fatal injury": 0.0968
+    },
+    "precision_per_class": {
+      "Slight Injury": 0.8583,
+      "Serious Injury": 0.614,
+      "Fatal injury": 0.375
+    },
+    "roc_auc": 0.6636,
+    "feature_importance": {
+      "Number_of_vehicles_involved": 0.1128,
+      "Day_of_week": 0.07353,
+      "Types_of_Junction": 0.06951,
+      "Cause_of_accident": 0.06441,
+      "Number_of_casualties": 0.06356,
+      "Type_of_vehicle": 0.05565,
+      "Area_accident_occured": 0.05511,
+      "Age_band_of_driver": 0.0477,
+      "Vehicle_movement": 0.04747,
+      "Type_of_collision": 0.03736,
+      "Driving_experience": 0.0352,
+      "Light_conditions": 0.03501,
+      "Weather_conditions": 0.03477,
+      "Service_year_of_vehicle": 0.033,
+      "Road_allignment": 0.0321
+    }
+  },
+  "svm": {
+    "accuracy": 0.6717,
+    "weighted_f1": 0.711,
+    "macro_f1": 0.3852,
+    "train_time_seconds": 50.341,
+    "confusion_matrix": [
+      [
+        1507,
+        525,
+        52
+      ],
+      [
+        196,
+        144,
+        9
+      ],
+      [
+        16,
+        11,
+        4
+      ]
+    ],
+    "classification_report": {
+      "Slight": {
+        "precision": 0.8766724840023269,
+        "recall": 0.7231285988483686,
+        "f1-score": 0.7925322114120431,
+        "support": 2084.0
+      },
+      "Serious": {
+        "precision": 0.21176470588235294,
+        "recall": 0.41260744985673353,
+        "f1-score": 0.27988338192419826,
+        "support": 349.0
+      },
+      "Fatal": {
+        "precision": 0.06153846153846154,
+        "recall": 0.12903225806451613,
+        "f1-score": 0.08333333333333333,
+        "support": 31.0
+      },
+      "accuracy": 0.671672077922078,
+      "macro avg": {
+        "precision": 0.3833252171410471,
+        "recall": 0.4215894355898728,
+        "f1-score": 0.3852496422231915,
+        "support": 2464.0
+      },
+      "weighted avg": {
+        "precision": 0.7722398666077446,
+        "recall": 0.671672077922078,
+        "f1-score": 0.7109982801167112,
+        "support": 2464.0
+      }
+    },
+    "recall_per_class": {
+      "Slight Injury": 0.7231,
+      "Serious Injury": 0.4126,
+      "Fatal injury": 0.129
+    },
+    "precision_per_class": {
+      "Slight Injury": 0.8767,
+      "Serious Injury": 0.2118,
+      "Fatal injury": 0.0615
+    },
+    "roc_auc": 0.6117
+  },
+  "xgb": {
+    "accuracy": 0.845,
+    "weighted_f1": 0.8001,
+    "macro_f1": 0.4182,
+    "train_time_seconds": 16.22,
+    "confusion_matrix": [
+      [
+        2043,
+        40,
+        1
+      ],
+      [
+        313,
+        36,
+        0
+      ],
+      [
+        24,
+        4,
+        3
+      ]
+    ],
+    "classification_report": {
+      "Slight": {
+        "precision": 0.8584033613445378,
+        "recall": 0.9803262955854126,
+        "f1-score": 0.9153225806451613,
+        "support": 2084.0
+      },
+      "Serious": {
+        "precision": 0.45,
+        "recall": 0.10315186246418338,
+        "f1-score": 0.16783216783216784,
+        "support": 349.0
+      },
+      "Fatal": {
+        "precision": 0.75,
+        "recall": 0.0967741935483871,
+        "f1-score": 0.17142857142857143,
+        "support": 31.0
+      },
+      "accuracy": 0.8449675324675324,
+      "macro avg": {
+        "precision": 0.6861344537815125,
+        "recall": 0.39341745053266103,
+        "f1-score": 0.41819443996863354,
+        "support": 2464.0
+      },
+      "weighted avg": {
+        "precision": 0.7991934273709482,
+        "recall": 0.8449675324675324,
+        "f1-score": 0.8000892736819109,
+        "support": 2464.0
+      }
+    },
+    "recall_per_class": {
+      "Slight Injury": 0.9803,
+      "Serious Injury": 0.1032,
+      "Fatal injury": 0.0968
+    },
+    "precision_per_class": {
+      "Slight Injury": 0.8584,
+      "Serious Injury": 0.45,
+      "Fatal injury": 0.75
+    },
+    "roc_auc": 0.6498,
+    "feature_importance": {
+      "Number_of_vehicles_involved": 0.1128,
+      "Day_of_week": 0.07353,
+      "Types_of_Junction": 0.06951,
+      "Cause_of_accident": 0.06441,
+      "Number_of_casualties": 0.06356,
+      "Type_of_vehicle": 0.05565,
+      "Area_accident_occured": 0.05511,
+      "Age_band_of_driver": 0.0477,
+      "Vehicle_movement": 0.04747,
+      "Type_of_collision": 0.03736,
+      "Driving_experience": 0.0352,
+      "Light_conditions": 0.03501,
+      "Weather_conditions": 0.03477,
+      "Service_year_of_vehicle": 0.033,
+      "Road_allignment": 0.0321
+    }
+  },
+  "lgbm": {
+    "accuracy": 0.8446,
+    "weighted_f1": 0.793,
+    "macro_f1": 0.4003,
+    "train_time_seconds": 19.174,
+    "confusion_matrix": [
+      [
+        2054,
+        28,
+        2
+      ],
+      [
+        325,
+        24,
+        0
+      ],
+      [
+        26,
+        2,
+        3
+      ]
+    ],
+    "classification_report": {
+      "Slight": {
+        "precision": 0.8540540540540541,
+        "recall": 0.9856046065259118,
+        "f1-score": 0.9151258632212074,
+        "support": 2084.0
+      },
+      "Serious": {
+        "precision": 0.4444444444444444,
+        "recall": 0.06876790830945559,
+        "f1-score": 0.11910669975186104,
+        "support": 349.0
+      },
+      "Fatal": {
+        "precision": 0.6,
+        "recall": 0.0967741935483871,
+        "f1-score": 0.16666666666666666,
+        "support": 31.0
+      },
+      "accuracy": 0.8445616883116883,
+      "macro avg": {
+        "precision": 0.6328328328328329,
+        "recall": 0.38371556946125146,
+        "f1-score": 0.4002997432132451,
+        "support": 2464.0
+      },
+      "weighted avg": {
+        "precision": 0.7928408115908117,
+        "recall": 0.8445616883116883,
+        "f1-score": 0.792961527529652,
+        "support": 2464.0
+      }
+    },
+    "recall_per_class": {
+      "Slight Injury": 0.9856,
+      "Serious Injury": 0.0688,
+      "Fatal injury": 0.0968
+    },
+    "precision_per_class": {
+      "Slight Injury": 0.8541,
+      "Serious Injury": 0.4444,
+      "Fatal injury": 0.6
+    },
+    "roc_auc": 0.6581,
+    "feature_importance": {
+      "Number_of_vehicles_involved": 0.1128,
+      "Day_of_week": 0.07353,
+      "Types_of_Junction": 0.06951,
+      "Cause_of_accident": 0.06441,
+      "Number_of_casualties": 0.06356,
+      "Type_of_vehicle": 0.05565,
+      "Area_accident_occured": 0.05511,
+      "Age_band_of_driver": 0.0477,
+      "Vehicle_movement": 0.04747,
+      "Type_of_collision": 0.03736,
+      "Driving_experience": 0.0352,
+      "Light_conditions": 0.03501,
+      "Weather_conditions": 0.03477,
+      "Service_year_of_vehicle": 0.033,
+      "Road_allignment": 0.0321
+    }
+  }
+}

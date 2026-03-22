@@ -1,0 +1,285 @@
+{% extends "base.html" %}
+{% block title %}Result #{{ pred_id }} — RTA Predictor{% endblock %}
+
+{% block content %}
+<div x-data="{
+  showChartJs: false,
+  ringProgress: 0,
+  init() {
+    setTimeout(() => { this.ringProgress = {{ (confidence * 100)|int }}; }, 200);
+  }
+}">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <div class="flex items-center gap-2 text-xs text-gray-400 mb-1">
+        <a href="/dashboard" class="hover:text-gray-600">Dashboard</a>
+        <span>/</span>
+        <a href="/predict" class="hover:text-gray-600">Predict</a>
+        <span>/</span>
+        <span class="font-mono">Result #{{ pred_id }}</span>
+      </div>
+      <h1 class="text-xl font-bold text-gray-900">Prediction Result</h1>
+    </div>
+    <div class="flex items-center gap-2">
+      <button onclick="window.print()"
+        class="border border-gray-200 text-gray-600 px-3 py-2 rounded-lg text-xs hover:bg-gray-50 transition-colors flex items-center gap-1">
+        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+        Print
+      </button>
+      <a href="/predict"
+        class="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-700 transition-colors">
+        Predict Again
+      </a>
+    </div>
+  </div>
+
+  <!-- ── Top row: confidence ring + severity badge + metadata ── -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+
+    <!-- Confidence ring -->
+    <div class="bg-white border border-gray-200 rounded-xl p-6 flex flex-col items-center">
+      <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-4">Model Confidence</p>
+          {% set conf_pct = (result.confidence * 100)|round|int %}
+          {% if conf_pct >= 90 %}
+          <span class="mt-2 inline-block bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">HIGH CONFIDENCE</span>
+          <p class="text-xs text-green-600 mt-1">Prediction reliable</p>
+          {% elif conf_pct >= 75 %}
+          <span class="mt-2 inline-block bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">GOOD CONFIDENCE</span>
+          <p class="text-xs text-green-600 mt-1">Prediction reliable</p>
+          {% elif conf_pct >= 60 %}
+          <span class="mt-2 inline-block bg-amber-100 text-amber-700 text-xs font-bold px-3 py-1 rounded-full">MODERATE</span>
+          <p class="text-xs text-amber-600 mt-1">Use with caution</p>
+          {% else %}
+          <span class="mt-2 inline-block bg-red-100 text-red-700 text-xs font-bold px-3 py-1 rounded-full">LOW CONFIDENCE</span>
+          <p class="text-xs text-red-600 mt-1">Manual review recommended</p>
+          {% endif %}
+      <div class="relative w-36 h-36">
+        <svg viewBox="0 0 120 120" class="w-full h-full -rotate-90">
+          <circle cx="60" cy="60" r="50" fill="none" stroke="#f3f4f6" stroke-width="10"/>
+          <circle cx="60" cy="60" r="50" fill="none"
+            stroke="{% if severity_color == 'green' %}#16a34a{% elif severity_color == 'amber' %}#d97706{% else %}#dc2626{% endif %}"
+            stroke-width="10"
+            stroke-linecap="round"
+            stroke-dasharray="314"
+            :stroke-dashoffset="314 - (314 * ringProgress / 100)"
+            style="transition: stroke-dashoffset 1.2s ease-out;"
+          />
+        </svg>
+        <div class="absolute inset-0 flex flex-col items-center justify-center">
+          <span class="text-3xl font-bold text-gray-900" x-text="ringProgress + '%'">0%</span>
+          <span class="text-xs text-gray-400">confidence</span>
+        </div>
+      </div>
+      <p class="text-xs text-gray-400 mt-3 font-mono">Model: {{ model_name }}</p>
+    </div>
+
+    <!-- Severity badge + probabilities -->
+    <div class="bg-white border border-gray-200 rounded-xl p-6 flex flex-col">
+      <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-4">Predicted Severity</p>
+      <div class="flex-1 flex items-center">
+        <span class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-lg font-bold
+          {% if severity_color == 'green' %}bg-green-50 text-green-700 border-2 border-green-200
+          {% elif severity_color == 'amber' %}bg-amber-50 text-amber-700 border-2 border-amber-200
+          {% else %}bg-red-50 text-red-700 border-2 border-red-200{% endif %}">
+          <span class="w-3 h-3 rounded-full
+            {% if severity_color == 'green' %}bg-green-500
+            {% elif severity_color == 'amber' %}bg-amber-500
+            {% else %}bg-red-500{% endif %}"></span>
+          {{ severity_label }}
+        </span>
+      </div>
+      <div class="mt-4 space-y-2">
+        {% for label, prob in probabilities.items() %}
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-gray-500 w-28 truncate">{{ label }}</span>
+          <div class="flex-1 bg-gray-100 rounded-full h-1.5">
+            <div class="h-1.5 rounded-full
+              {% if 'Slight' in label %}bg-green-500
+              {% elif 'Serious' in label %}bg-amber-500
+              {% else %}bg-red-500{% endif %}"
+              style="width: {{ (prob * 100)|int }}%"></div>
+          </div>
+          <span class="text-xs font-mono text-gray-600 w-10 text-right">{{ (prob * 100)|round(1) }}%</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Metadata -->
+    <div class="bg-white border border-gray-200 rounded-xl p-6">
+      <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-4">Prediction Info</p>
+      <div class="space-y-3 text-sm">
+        <div class="flex justify-between">
+          <span class="text-gray-500">Prediction ID</span>
+          <span class="font-mono text-gray-800">#{{ pred_id }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-500">Timestamp</span>
+          <span class="font-mono text-gray-800 text-xs">{{ timestamp.strftime('%Y-%m-%d %H:%M') }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-500">Model used</span>
+          <span class="text-gray-800">{{ model_name }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-500">Features</span>
+          <span class="text-gray-800">31 categorical</span>
+        </div>
+      </div>
+      <a href="/history"
+        class="mt-5 block w-full text-center border border-gray-200 text-gray-600 py-2 rounded-lg text-xs hover:bg-gray-50 transition-colors">
+        View full history →
+      </a>
+    </div>
+
+  </div>
+
+  <!-- ── Probability Bar Chart (Chart.js) ── -->
+  <div class="bg-white border border-gray-200 rounded-xl p-6 mb-5">
+    <div class="flex items-center justify-between mb-4">
+      <p class="text-sm font-semibold text-gray-800">Class Probability Distribution</p>
+    </div>
+    <div class="relative h-32">
+      <canvas id="probChart"></canvas>
+    </div>
+  </div>
+
+  <!-- ── SHAP Waterfall ── -->
+  {% if shap_values %}
+  <div class="bg-white border border-gray-200 rounded-xl p-6 mb-5">
+    <div class="flex items-center justify-between mb-1">
+      <div>
+        <p class="text-sm font-semibold text-gray-800">Feature Impact (SHAP Values)</p>
+        <p class="text-xs text-gray-400 mt-0.5">
+          Top 10 features driving this prediction.
+          <span class="text-red-500 font-medium">Red = increases severity risk</span> ·
+          <span class="text-blue-500 font-medium">Blue = decreases risk</span>
+        </p>
+      </div>
+      <button @click="showChartJs = !showChartJs"
+        class="text-xs border border-gray-200 px-3 py-1.5 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors"
+        x-text="showChartJs ? 'Show bars' : 'Chart.js view'">
+      </button>
+    </div>
+
+    <!-- Native waterfall bars -->
+    <div x-show="!showChartJs" class="mt-4 space-y-2">
+      {% for feature, value in shap_values.items() %}
+      <div class="flex items-center gap-3">
+        <span class="text-xs text-gray-600 w-44 truncate text-right shrink-0">{{ feature }}</span>
+        <div class="flex-1 flex items-center gap-1 h-6">
+          {% if value >= 0 %}
+          <div class="flex-1 flex justify-start items-center">
+            <div class="h-5 rounded-sm bg-red-400 opacity-80 transition-all"
+              style="width: {{ [((value | abs) * 400)|int, 200]|min }}px; min-width: 2px;">
+            </div>
+          </div>
+          {% else %}
+          <div class="flex-1 flex justify-end items-center">
+            <div class="h-5 rounded-sm bg-blue-400 opacity-80 transition-all"
+              style="width: {{ [((value | abs) * 400)|int, 200]|min }}px; min-width: 2px;">
+            </div>
+          </div>
+          {% endif %}
+        </div>
+        <span class="text-xs font-mono {% if value >= 0 %}text-red-600{% else %}text-blue-600{% endif %} w-14 text-right">
+          {{ '+' if value >= 0 else '' }}{{ value }}
+        </span>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Chart.js horizontal bar -->
+    <div x-show="showChartJs" x-cloak class="mt-4 relative" style="height: 280px;">
+      <canvas id="shapChart"></canvas>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- ── Key Inputs Summary ── -->
+  <div class="bg-white border border-gray-200 rounded-xl p-6 mb-5">
+    <p class="text-sm font-semibold text-gray-800 mb-4">Key Input Summary</p>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      {% for label, value in key_inputs.items() %}
+      <div class="bg-gray-50 rounded-lg p-3">
+        <p class="text-xs text-gray-400 mb-1">{{ label }}</p>
+        <p class="text-sm font-medium text-gray-800 truncate">{{ value }}</p>
+      </div>
+      {% endfor %}
+    </div>
+    <details class="mt-4">
+      <summary class="text-xs text-gray-400 cursor-pointer hover:text-gray-600">Show all 31 inputs</summary>
+      <div class="mt-3 grid grid-cols-2 sm:grid-cols-3 gap-2">
+        {% for key, value in inputs.items() %}
+        <div class="text-xs">
+          <span class="text-gray-400">{{ key.replace('_', ' ').title() }}:</span>
+          <span class="text-gray-700 ml-1">{{ value }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </details>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Probability bar chart
+  const probLabels = {{ probabilities.keys() | list | tojson }};
+  const probData = {{ probabilities.values() | list | tojson }};
+  new Chart(document.getElementById('probChart'), {
+    type: 'bar',
+    data: {
+      labels: probLabels,
+      datasets: [{
+        data: probData.map(v => (v * 100).toFixed(1)),
+        backgroundColor: ['#16a34a', '#d97706', '#dc2626'],
+        borderRadius: 6,
+        borderWidth: 0,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { min: 0, max: 100, ticks: { callback: v => v + '%', font: { size: 11 } }, grid: { color: '#f3f4f6' } },
+        y: { ticks: { font: { size: 11 } }, grid: { display: false } }
+      }
+    }
+  });
+
+  // SHAP Chart.js view
+  {% if shap_values %}
+  const shapLabels = {{ shap_values.keys() | list | tojson }};
+  const shapVals = {{ shap_values.values() | list | tojson }};
+  const shapColors = shapVals.map(v => v >= 0 ? 'rgba(248,113,113,0.8)' : 'rgba(96,165,250,0.8)');
+
+  new Chart(document.getElementById('shapChart'), {
+    type: 'bar',
+    data: {
+      labels: shapLabels,
+      datasets: [{
+        label: 'SHAP Value',
+        data: shapVals,
+        backgroundColor: shapColors,
+        borderRadius: 4,
+        borderWidth: 0,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { font: { size: 10 } }, grid: { color: '#f3f4f6' } },
+        y: { ticks: { font: { size: 10 } }, grid: { display: false } }
+      }
+    }
+  });
+  {% endif %}
+</script>
+{% endblock %}

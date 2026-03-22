@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% block title %}Sign In — RTA Predictor{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50 to-blue-50 flex items-center justify-center px-4 py-12">
+  <div class="w-full max-w-md">
+
+    <!-- Logo -->
+    <div class="text-center mb-8">
+      <img src="/static/logo.png" alt="CrashSense" class="h-28 w-auto mx-auto mb-2 object-contain">
+      <h1 class="text-2xl font-bold text-gray-900">Crash<span class="text-indigo-600">Sense</span></h1>
+      <p class="text-sm text-gray-500 mt-1">Road Traffic Accident Severity Predictor</p>
+    </div>
+
+    <!-- Card — Alpine manages tab state purely in JS, no Jinja inside x-data -->
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden"
+         x-data="loginCard()" x-init="init()">
+
+      <!-- Tab switcher -->
+      <div class="flex border-b border-gray-100">
+        <button @click="tab='login'"
+          :class="tab==='login' ? 'border-b-2 border-indigo-600 text-indigo-600 font-semibold' : 'text-gray-500 hover:text-gray-700'"
+          class="flex-1 py-3.5 text-sm transition-colors">
+          Sign in
+        </button>
+        <button @click="tab='register'"
+          :class="tab==='register' ? 'border-b-2 border-indigo-600 text-indigo-600 font-semibold' : 'text-gray-500 hover:text-gray-700'"
+          class="flex-1 py-3.5 text-sm transition-colors">
+          Create account
+        </button>
+      </div>
+
+      <!-- Error banner -->
+      {% if error %}
+      <div class="mx-6 mt-5 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700 flex items-start gap-2">
+        <svg class="w-4 h-4 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M18 10A8 8 0 11 2 10a8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+        </svg>
+        <span>{{ error }}</span>
+      </div>
+      {% endif %}
+
+      <!-- Sign In Form -->
+      <div x-show="tab==='login'" class="p-6 space-y-4">
+        <form method="POST" action="/login">
+          <input type="hidden" name="next" value="{{ next }}" />
+          <div class="space-y-1">
+            <label class="text-xs font-medium text-gray-600 uppercase tracking-wide">Email</label>
+            <input type="email" name="email" required placeholder="you@example.com"
+              class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          </div>
+          <div class="space-y-1 mt-4">
+            <label class="text-xs font-medium text-gray-600 uppercase tracking-wide">Password</label>
+            <input type="password" name="password" required placeholder="••••••••"
+              class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          </div>
+          <button type="submit"
+            class="w-full mt-5 bg-gray-900 text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-gray-700 transition-colors">
+            Sign in
+          </button>
+        </form>
+        <p class="text-center text-xs text-gray-500 pt-2">
+          Don't have an account?
+          <button @click="tab='register'" class="text-indigo-600 hover:underline font-medium">Create one</button>
+        </p>
+      </div>
+
+      <!-- Register Form -->
+      <div x-show="tab==='register'" class="p-6 space-y-4">
+        <form method="POST" action="/register">
+          <div class="space-y-1">
+            <label class="text-xs font-medium text-gray-600 uppercase tracking-wide">Full Name</label>
+            <input type="text" name="full_name" required placeholder="Your name"
+              class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          </div>
+          <div class="space-y-1 mt-4">
+            <label class="text-xs font-medium text-gray-600 uppercase tracking-wide">Email</label>
+            <input type="email" name="email" required placeholder="you@example.com"
+              class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          </div>
+          <div class="space-y-1 mt-4">
+            <label class="text-xs font-medium text-gray-600 uppercase tracking-wide">Password</label>
+            <input type="password" name="password" required placeholder="Min. 8 characters"
+              class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          </div>
+          <div class="space-y-1 mt-4">
+            <label class="text-xs font-medium text-gray-600 uppercase tracking-wide">Confirm Password</label>
+            <input type="password" name="confirm_password" required placeholder="Repeat password"
+              class="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          </div>
+          <button type="submit"
+            class="w-full mt-5 bg-gray-900 text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-gray-700 transition-colors">
+            Create account
+          </button>
+        </form>
+        <p class="text-center text-xs text-gray-500 pt-2">
+          Already have an account?
+          <button @click="tab='login'" class="text-indigo-600 hover:underline font-medium">Sign in</button>
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Stats -->
+    <div class="mt-6 grid grid-cols-3 gap-3 text-center">
+      <div class="bg-white/70 rounded-xl p-3 border border-gray-100">
+        <p class="text-lg font-bold text-gray-900">12,316</p>
+        <p class="text-xs text-gray-500">Training rows</p>
+      </div>
+      <div class="bg-white/70 rounded-xl p-3 border border-gray-100">
+        <p class="text-lg font-bold text-gray-900">12</p>
+        <p class="text-xs text-gray-500">ML algorithms</p>
+      </div>
+      <div class="bg-white/70 rounded-xl p-3 border border-gray-100">
+        <p class="text-lg font-bold text-gray-900">25</p>
+        <p class="text-xs text-gray-500">Input features</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// Tab state managed entirely in JS — no Jinja2 inside Alpine x-data
+function loginCard() {
+  return {
+    // Read initial tab from server-rendered hidden input
+    tab: document.getElementById('initial_tab')?.value || 'login',
+    init() {
+      // If there's an error and we're on register, show register tab
+      const t = document.getElementById('initial_tab');
+      if (t) this.tab = t.value;
+    }
+  }
+}
+</script>
+
+<!-- Server tells JS which tab to show after form errors -->
+<input type="hidden" id="initial_tab" value="{{ tab | default('login') }}" />
+
+{% endblock %}

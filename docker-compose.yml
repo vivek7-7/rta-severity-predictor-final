@@ -1,0 +1,22 @@
+# docker-compose.yml
+# Local development stack for the RTA Severity Predictor.
+
+version: "3.9"
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app/ml/artifacts:/app/app/ml/artifacts
+      - ./rta.db:/app/rta.db
+    environment:
+      - SECRET_KEY=${SECRET_KEY:-dev-secret-change-me-in-production}
+      - DEBUG=true
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

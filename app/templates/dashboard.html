@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — RTA Predictor{% endblock %}
+
+{% block content %}
+<!-- ── Header ── -->
+<div class="flex items-center justify-between mb-6">
+  <div>
+    <h1 class="text-xl font-bold text-gray-900">Dashboard</h1>
+    <p class="text-sm text-gray-500 mt-0.5">Welcome back, {{ user.full_name.split()[0] }}</p>
+  </div>
+  <a href="/predict"
+    class="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-700 transition-colors flex items-center gap-2">
+    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+    </svg>
+    Quick Predict
+  </a>
+</div>
+
+<!-- ── Metric cards ── -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+  <div class="bg-white border border-gray-200 rounded-xl p-5">
+    <p class="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Total Predictions</p>
+    <p class="text-3xl font-bold text-gray-900">{{ total }}</p>
+  </div>
+  <div class="bg-green-50 border border-green-200 rounded-xl p-5">
+    <p class="text-xs font-medium text-green-600 uppercase tracking-wide mb-1">Slight Injury</p>
+    <p class="text-3xl font-bold text-green-700">{{ slight }}</p>
+  </div>
+  <div class="bg-amber-50 border border-amber-200 rounded-xl p-5">
+    <p class="text-xs font-medium text-amber-600 uppercase tracking-wide mb-1">Serious Injury</p>
+    <p class="text-3xl font-bold text-amber-700">{{ serious }}</p>
+  </div>
+  <div class="bg-red-50 border border-red-200 rounded-xl p-5">
+    <p class="text-xs font-medium text-red-600 uppercase tracking-wide mb-1">Fatal Injury</p>
+    <p class="text-3xl font-bold text-red-700">{{ fatal }}</p>
+  </div>
+</div>
+
+<!-- ── Charts row ── -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+
+  <!-- Doughnut: severity distribution -->
+  <div class="bg-white border border-gray-200 rounded-xl p-5">
+    <p class="text-sm font-semibold text-gray-800 mb-4">Severity Distribution</p>
+    {% if total == 0 %}
+    <div class="flex flex-col items-center justify-center h-40 text-gray-400">
+      <svg class="w-10 h-10 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10" stroke-width="2"/><path stroke-linecap="round" stroke-width="2" d="M12 8v4m0 4h.01"/></svg>
+      <p class="text-xs">No data yet</p>
+    </div>
+    {% else %}
+    <div class="relative h-44">
+      <canvas id="doughnutChart"></canvas>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Line: predictions per day -->
+  <div class="bg-white border border-gray-200 rounded-xl p-5 md:col-span-2">
+    <p class="text-sm font-semibold text-gray-800 mb-4">Predictions — Last 30 Days</p>
+    <div class="relative h-44">
+      <canvas id="lineChart"></canvas>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Bottom row: cause bar + model strip + recent ── -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+
+  <!-- Bar: top 5 causes -->
+  <div class="bg-white border border-gray-200 rounded-xl p-5">
+    <p class="text-sm font-semibold text-gray-800 mb-4">Top Causes of Accident</p>
+    {% if cause_chart.labels | length == 0 %}
+    <div class="flex flex-col items-center justify-center h-32 text-gray-400">
+      <p class="text-xs">No data yet</p>
+    </div>
+    {% else %}
+    <div class="relative h-44">
+      <canvas id="causeChart"></canvas>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Model performance strip -->
+  <div class="bg-white border border-gray-200 rounded-xl p-5">
+    <p class="text-sm font-semibold text-gray-800 mb-3">Top Models by F1</p>
+    {% if top_models %}
+    <div class="space-y-3">
+      {% for m in top_models %}
+      <div>
+        <div class="flex justify-between items-center mb-1">
+          <span class="text-xs font-medium text-gray-700">{{ m.name }}</span>
+          <span class="text-xs font-mono text-gray-500">F1 {{ m.weighted_f1 }}</span>
+        </div>
+        <div class="w-full bg-gray-100 rounded-full h-1.5">
+          <div class="bg-indigo-500 h-1.5 rounded-full" style="width: {{ (m.weighted_f1 * 100)|int }}%"></div>
+        </div>
+        <p class="text-xs text-gray-400 mt-0.5">Accuracy: {{ m.accuracy }}%</p>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="flex flex-col items-center justify-center h-28 text-gray-400">
+      <p class="text-xs text-center">Train models to see performance metrics</p>
+      <a href="/model-info" class="mt-2 text-xs text-indigo-600 hover:underline">View model info →</a>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Recent predictions -->
+  <div class="bg-white border border-gray-200 rounded-xl p-5">
+    <div class="flex justify-between items-center mb-3">
+      <p class="text-sm font-semibold text-gray-800">Recent Predictions</p>
+      <a href="/history" class="text-xs text-indigo-600 hover:underline">View all →</a>
+    </div>
+    {% if recent %}
+    <div class="space-y-2">
+      {% for p in recent %}
+      <a href="/result/{{ p.id }}" class="flex items-center justify-between py-2 border-b border-gray-50 hover:bg-gray-50 rounded px-1 transition-colors">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full
+            {% if p.severity_code == 0 %}bg-green-500
+            {% elif p.severity_code == 1 %}bg-amber-500
+            {% else %}bg-red-500{% endif %}"></span>
+          <span class="text-xs text-gray-700 truncate max-w-[100px]">{{ p.severity_label }}</span>
+        </div>
+        <span class="text-xs font-mono text-gray-400">{{ (p.confidence * 100)|int }}%</span>
+      </a>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="flex flex-col items-center justify-center h-28 text-gray-400">
+      <p class="text-xs">No predictions yet</p>
+      <a href="/predict" class="mt-2 text-xs text-indigo-600 hover:underline">Make your first →</a>
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const severityData = {{ severity_chart | tojson }};
+  const lineData = {{ line_chart | tojson }};
+  const causeData = {{ cause_chart | tojson }};
+
+  // Doughnut
+  {% if total > 0 %}
+  new Chart(document.getElementById('doughnutChart'), {
+    type: 'doughnut',
+    data: {
+      labels: severityData.labels,
+      datasets: [{
+        data: severityData.data,
+        backgroundColor: ['#16a34a', '#d97706', '#dc2626'],
+        borderWidth: 2,
+        borderColor: '#fff',
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '65%',
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 11 }, boxWidth: 10 } } }
+    }
+  });
+  {% endif %}
+
+  // Line chart
+  new Chart(document.getElementById('lineChart'), {
+    type: 'line',
+    data: {
+      labels: lineData.labels.map(d => d.slice(5)), // MM-DD
+      datasets: [{
+        label: 'Predictions',
+        data: lineData.data,
+        borderColor: '#6366f1',
+        backgroundColor: 'rgba(99,102,241,0.08)',
+        borderWidth: 2,
+        fill: true,
+        tension: 0.4,
+        pointRadius: 2,
+        pointHoverRadius: 4,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 10 }, maxTicksLimit: 8 } },
+        y: { beginAtZero: true, ticks: { font: { size: 10 }, stepSize: 1 }, grid: { color: '#f3f4f6' } }
+      }
+    }
+  });
+
+  // Cause bar chart
+  {% if cause_chart.labels | length > 0 %}
+  new Chart(document.getElementById('causeChart'), {
+    type: 'bar',
+    data: {
+      labels: causeData.labels,
+      datasets: [{
+        label: 'Count',
+        data: causeData.data,
+        backgroundColor: '#e0e7ff',
+        borderColor: '#6366f1',
+        borderWidth: 1.5,
+        borderRadius: 4,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { beginAtZero: true, ticks: { font: { size: 10 } }, grid: { color: '#f3f4f6' } },
+        y: { ticks: { font: { size: 10 } }, grid: { display: false } }
+      }
+    }
+  });
+  {% endif %}
+</script>
+{% endblock %}
