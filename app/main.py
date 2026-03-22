@@ -18,7 +18,7 @@ from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.config import settings
-from app.database import create_tables
+from app.database import init_db
 from app.ml import predictor
 from app.routers import auth, predict, result, history, dashboard, model_info
 
@@ -37,7 +37,7 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     """Startup: create DB tables + load ML artifacts. Shutdown: nothing to clean."""
     logger.info("▶  Starting %s v%s", settings.APP_NAME, settings.APP_VERSION)
-    await create_tables()
+    await init_db()
     predictor.load_artifacts()
     logger.info("✓  Application ready.")
     yield
