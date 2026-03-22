@@ -1,168 +1,63 @@
-# RTA Severity Predictor
+# CrashSense — Road Traffic Accident Severity Predictor
 
-![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688?logo=fastapi)
-![License](https://img.shields.io/badge/License-MIT-green)
-![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker)
+A full-stack machine learning web application that predicts road accident severity
+(Slight Injury / Serious Injury / Fatal Injury) using 25 features from the
+Addis Ababa RTA dataset (12,316 records).
 
-A portfolio-grade full-stack ML web application that predicts road accident severity (**Slight / Serious / Fatal**) using the **Addis Ababa RTA dataset** (12,316 instances, 31 features).
-
-Trains **12 ML algorithms** covering the full university syllabus (Units I–V), served via **FastAPI** with a beautiful **Tailwind CSS + Alpine.js + Chart.js** frontend.
+**Live Demo:** https://rta-severity-predictor-1-avcv.onrender.com
 
 ---
 
-## Features
+## Tech Stack
 
-- 🔐 **JWT Authentication** — register, login, httpOnly cookie sessions
-- 🔮 **Real-time Predictions** — 31-feature accordion form → instant severity prediction
-- 📊 **SHAP Explainability** — waterfall chart showing why each prediction was made
-- 📈 **Dashboard** — doughnut, line, and bar charts of your prediction history
-- 🗂 **Prediction History** — paginated table with filters + CSV export
-- 🤖 **12 ML Models** — select any trained model for each prediction
-- 📋 **Model Comparison** — sortable metrics table, confusion matrix, feature importance
-- 🐳 **Docker Ready** — single-command deployment
-- 🚀 **CI/CD** — GitHub Actions → Docker Hub → Render.com
-
----
-
-## Quick Start
-
-```bash
-# 1. Clone and install
-git clone https://github.com/yourname/rta-severity-predictor.git
-cd rta-severity-predictor
-python -m venv venv && source venv/bin/activate
-pip install -r requirements.txt
-
-# 2. Add dataset
-mkdir data
-# Download RTA_Dataset.csv from Kaggle and place it at data/RTA_Dataset.csv
-# https://www.kaggle.com/datasets/saurabhshahane/road-traffic-accidents
-
-# 3. Train all 12 models (takes ~10-20 min)
-python notebooks/train_all_models.py
-
-# 4. Run the application
-uvicorn app.main:app --reload --port 8000
-
-# 5. Open http://localhost:8000
-```
-
-**Skip slow models during development:**
-```bash
-python notebooks/train_all_models.py --skip-slow   # skips SVM + Optuna
-```
+| Layer | Technology |
+|---|---|
+| Backend | FastAPI 0.111 (async Python) |
+| Frontend | Jinja2 + Tailwind CSS + Alpine.js + Chart.js |
+| Database | SQLite (dev) → PostgreSQL/Supabase (production) |
+| ORM | SQLAlchemy 2.0 async |
+| Auth | JWT tokens + werkzeug password hashing |
+| ML | scikit-learn 1.8.0 |
+| Explainability | SHAP TreeExplainer |
+| Deployment | Docker + Render.com |
 
 ---
 
-## Model Performance (after training)
+## 11 ML Models — Results (25 features)
 
-| Rank | Model             | Unit | Accuracy | Weighted F1 | ROC-AUC | Train Time |
-|------|-------------------|------|----------|-------------|---------|------------|
-| 1    | XGBoost (tuned)   | III  | —        | —           | —       | —          |
-| 2    | LightGBM          | III  | —        | —           | —       | —          |
-| 3    | Random Forest     | III  | —        | —           | —       | —          |
-| 4    | Gradient Boosting | III  | —        | —           | —       | —          |
-| 5    | MLP Neural Net    | IV   | —        | —           | —       | —          |
-| 6    | SVM (RBF)         | III  | —        | —           | —       | —          |
-| 7    | Logistic Reg.     | III  | —        | —           | —       | —          |
-| 8    | KNN (k=5)         | III  | —        | —           | —       | —          |
-| 9    | Decision Tree     | III  | —        | —           | —       | —          |
-| 10   | Naïve Bayes       | III  | —        | —           | —       | —          |
-| 11   | Ridge Regression  | II   | —        | —           | —       | —          |
-| 12   | Lasso Regression  | II   | —        | —           | —       | —          |
+| # | Model | Unit | Accuracy | Weighted F1 | Fatal Recall |
+|---|---|---|---|---|---|
+| 1 | Gradient Boosting ★ | III | 85.11% | 0.803 | 9.68% |
+| 2 | XGBoost (HistGB) | III | 84.50% | 0.800 | 9.68% |
+| 3 | LightGBM (HistGB) | III | 84.46% | 0.793 | 9.68% |
+| 4 | Random Forest | III | 83.36% | 0.791 | 16.13% |
+| 5 | KNN (k=5) | III | 83.36% | 0.779 | 0.00% |
+| 6 | Naive Bayes | III | 82.51% | 0.766 | 0.00% |
+| 7 | SVM (RBF) | III | 67.17% | 0.711 | 12.90% |
+| 8 | Logistic Regression | III | 48.99% | 0.583 | 51.61% |
+| 9 | Decision Tree | III | 47.73% | 0.555 | 45.16% |
+| 10 | Ridge Regression | II | 84.58% | 0.775 | 0.00% |
+| 11 | Lasso Regression | II | 84.58% | 0.775 | 0.00% |
 
-*Fill in after running `train_all_models.py`*
-
----
-
-## Project Structure
-
-```
-rta-severity-predictor/
-├── app/
-│   ├── main.py                  # FastAPI app + lifespan
-│   ├── config.py                # Settings (pydantic-settings)
-│   ├── database.py              # Async SQLAlchemy + SQLite
-│   ├── models/                  # ORM: User, Prediction
-│   ├── schemas/                 # Pydantic: auth, prediction
-│   ├── routers/                 # auth, predict, result, history, dashboard, model_info
-│   ├── ml/
-│   │   ├── predictor.py         # Predictor class + SHAP + demo mode
-│   │   ├── features.py          # Feature order, options, model registry
-│   │   └── artifacts/           # .pkl files (gitignored)
-│   └── templates/               # Jinja2 HTML (base, login, dashboard, predict, result, history, model_info)
-├── notebooks/
-│   ├── 01_eda.ipynb             # Exploratory Data Analysis
-│   └── train_all_models.py      # Full training pipeline (all 12 models)
-├── tests/                       # pytest suite
-├── Dockerfile
-├── docker-compose.yml
-└── .github/workflows/deploy.yml
-```
+★ Default production model — best weighted F1 score
 
 ---
 
-## API Endpoints
+## Features Used (25 of original 30)
 
-| Method | Path                    | Auth | Description                     |
-|--------|-------------------------|------|---------------------------------|
-| GET    | /login                  | ✗    | Login / register page           |
-| POST   | /login                  | ✗    | Process login → set JWT cookie  |
-| POST   | /register               | ✗    | Create account                  |
-| GET    | /logout                 | ✓    | Clear cookie → redirect         |
-| GET    | /dashboard              | ✓    | Dashboard with charts           |
-| GET    | /predict                | ✓    | 31-field prediction form        |
-| POST   | /predict                | ✓    | Run prediction → redirect       |
-| GET    | /result/{id}            | ✓    | Result page with SHAP           |
-| GET    | /history                | ✓    | Paginated prediction history    |
-| GET    | /history/export         | ✓    | Download history as CSV         |
-| POST   | /history/{id}/delete    | ✓    | Delete a prediction             |
-| GET    | /model-info             | ✓    | Model comparison + dataset info |
-| GET    | /docs                   | ✗    | Swagger UI (auto-generated)     |
-| GET    | /redoc                  | ✗    | ReDoc (auto-generated)          |
+**Removed 5 features for fairness and data integrity:**
+- `Sex_of_driver` — demographic police record, no causal link to severity
+- `Sex_of_casualty` — demographic police record, no causal link to severity
+- `Work_of_casuality` — administrative police field
+- `Fitness_of_casuality` — administrative police field
+- `Casualty_severity` — data leakage (only known after accident outcome)
 
 ---
 
-## Docker Deployment
+## Database — SQLite to PostgreSQL Migration
 
-```bash
-# Build and run locally
-docker-compose up --build
+Currently uses SQLite. To switch to PostgreSQL (Supabase):
 
-# Or manually
-docker build -t rta-predictor .
-docker run -p 8000:8000 \
-  -e SECRET_KEY=your-secret-key \
-  -v $(pwd)/app/ml/artifacts:/app/app/ml/artifacts \
-  rta-predictor
-```
-
----
-
-## Deploy to Render.com
-
-1. Push to GitHub main branch
-2. GitHub Actions runs tests → builds Docker image → pushes to Docker Hub
-3. Render deploy hook is triggered automatically
-4. Set environment variables in Render dashboard:
-   - `SECRET_KEY` — a long random string
-   - Mount a persistent disk at `/app/app/ml/artifacts` (or pre-train and bake artifacts into image)
-
----
-
-## Dataset
-
-**Road Traffic Accidents — Addis Ababa Sub-City**  
-[Kaggle Link](https://www.kaggle.com/datasets/saurabhshahane/road-traffic-accidents)
-
-- 12,316 instances, 31 categorical features
-- Target: `Accident_severity` → Slight Injury (75%) / Serious Injury (20%) / Fatal injury (5%)
-- Class imbalance handled with **SMOTE**
-- Missing values imputed with **column mode**
-
----
-
-## License
-
-MIT License — see [LICENSE](LICENSE)
+1. Create project on supabase.com
+2. Copy connection string from Settings → Database → URI tab
+3. Add to Render environment variables:
