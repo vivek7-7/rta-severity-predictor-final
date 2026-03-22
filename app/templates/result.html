@@ -41,7 +41,7 @@
     <!-- Confidence ring -->
     <div class="bg-white border border-gray-200 rounded-xl p-6 flex flex-col items-center">
       <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-4">Model Confidence</p>
-          {% set conf_pct = (result.confidence * 100)|round|int %}
+          {% set conf_pct = (confidence * 100)|round|int %}
           {% if conf_pct >= 90 %}
           <span class="mt-2 inline-block bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">HIGH CONFIDENCE</span>
           <p class="text-xs text-green-600 mt-1">Prediction reliable</p>
